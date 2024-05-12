@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booktopia</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgb(41, 0, 0);
+            
+        }
+
+        header {
+            background-color: #064048;
+            color:  rgb(41, 0, 0);
+            padding: 15px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #533d3d;
+            color:#feffdc;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #cccab1;
+            text-align: left;
+            padding: 12px;
+        }
+
+        th {
+            background-color: #6f5f49;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        label {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #333;
+            color: #e2d8b9;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        .status-unread {
+            color: blue;
+        }
+
+        .status-reading {
+            color: orange;
+        }
+
+        .status-read {
+            color: green;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Booktopia</h1>
+        
+    </header>
+
+    <main>
+        <h2>Book List</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Read Status</th>
+                    <th>Rate: /10</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Your book entries will go here -->
+            </tbody>
+        </table>
+
+        <h2>Add a New Book</h2>
+
+        <form id="bookForm">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author" required>
+            
+            <label for="Rate">Rate: /10</label>
+            <select id="rate" name="rate" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            
+            </select>
+
+            <label for="genre">Genre:</label>
+            <select id="genre" name="genre" required>
+                <option value="Selfhelp">Self help</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Thriller">Thriller</option>
+                <option value="Romance">Romance</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Horror">Horror</option>
+                <option value="Crime">Crime</option>
+                <option value="Historical fiction">Historical fiction</option>
+                <option value="Science fiction">Science fiction</option>
+                <option value="literary fiction">literary fiction</option>
+                <option value="Young adult">Young adult</option>
+                <option value="Humour and satire">Humour and satire</option>
+                <option value="other">Other</option></select>
+
+                
+
+
+
+            <label for="status">Read Status:</label>
+            <select id="status" name="status" required>
+                <option value="unread">Unread</option>
+                <option value="reading">Reading</option>
+                <option value="read">Read</option>
+            </select>
+
+            <button type="button" onclick="addBook()">Add Book</button>
+        </form>
+    </main>
+    
+    
+
+    <script>
+        
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Load books from local storage on page load
+            loadBooks();
+        });
+
+        function addBook() {
+            var title = document.getElementById('title').value;
+            var author = document.getElementById('author').value;
+            var genre = document.getElementById('genre').value;
+            var rate = document.getElementById('rate').value;
+            var status = document.getElementById('status').value;
+
+            var book = {
+                title: title,
+                author: author,
+                rate: rate,
+                genre: genre,
+                status: status
+            };
+
+            // Add book to the table
+            addBookToTable(book);
+
+            // Save books to local storage
+            saveBooks();
+
+            // Clear the form fields
+            document.getElementById('title').value = '';
+            document.getElementById('author').value = '';
+            document.getElementById('genre').value = '';
+            document.getElementById('rate').value = '';
+
+            document.getElementById('status').value = 'unread';
+        }
+
+        function addBookToTable(book) {
+            var table = document.querySelector('tbody');
+            var row = table.insertRow();
+
+            row.innerHTML = `<td>${book.title}</td>
+                             <td>${book.author}</td>
+                             <td>${book.genre}</td>
+                             <td class="status-${book.status}">${book.status}</td>
+                             <td>${book.rate}</td>
+                             <td><button class="delete-btn" onclick="deleteBook(this)">Delete</button></td>`;
+        }
+
+        function deleteBook(button) {
+            var row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+
+            // Save books to local storage after deletion
+            saveBooks();
+        }
+
+        function saveBooks() {
+            var books = [];
+            var rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(function (row) {
+                var book = {
+                    title: row.cells[0].textContent,
+                    author: row.cells[1].textContent,
+                    genre: row.cells[2].textContent,
+                    status: row.cells[3].textContent.toLowerCase()
+                };
+                books.push(book);
+            });
+
+            // Save to local storage
+            localStorage.setItem('books', JSON.stringify(books));
+        }
+
+        function loadBooks() {
+            var books = JSON.parse(localStorage.getItem('books')) || [];
+
+            books.forEach(function (book) {
+                addBookToTable(book);
+            });
+        }
+    </script>
+</body>
+
+</html>
